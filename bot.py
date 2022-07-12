@@ -15,7 +15,7 @@ parser.add_argument('-b', '--bot_token', default='5376821545:AAEh44iTkHZBqKo4Sv2
 parser.add_argument('-v', '--verbose', default=True, type=bool,
                     help='нужно ли выводить прогресс сборки картинок пользователю')
 parser.add_argument('-c', '--comments', default=False, type=bool,
-                    help='нужно ли выводить прогресс сборки картинок пользователю')
+                    help='нужно ли парсить комментарии')
 
 args = parser.parse_args()
 
@@ -66,9 +66,7 @@ async def menu(call: types.CallbackQuery):
     Обработчик комманд клавиатуры
     """
     if os.path.exists(f'{call.message.chat.id}.jpg'):
-        await bot.send_message(call.message.chat.id,
-                               'Пожалуйста подождите результатов, после их получения можно будет выбрать другую группу',
-                               reply_markup=okay)
+        await bot.send_message(call.message.chat.id,'Подождите результатов', reply_markup=okay)
     else:
         # await bot.send_message(call.message.chat.id, f'Выбрана группа vk.com/{call.data}.')
         res = await vkparser.parse_posts(call)

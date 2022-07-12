@@ -20,6 +20,10 @@ class ParserVK:
         Параметры:
             vk_token: str
                 токен vk api
+            verbose: bool
+                нужно ли выводить прогресс сборки картинок пользователю
+            check_comments: bool
+                нужно ли парсить комментарии
         """
         self.api = vk_requests.create_api(service_token=vk_token)
         self.verbose = verbose
