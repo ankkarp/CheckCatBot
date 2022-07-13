@@ -25,7 +25,7 @@ class ParserVK:
             check_comments: bool
                 нужно ли парсить комментарии
             delay: float
-                минимальное время между запросами (в секундах)
+                минимальное время между запросами (в микросекундах)
         """
         self.api = vk_requests.create_api(service_token=vk_token)
         self.verbose = verbose
