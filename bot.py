@@ -12,26 +12,21 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-a', '--vk_api_token', type=str, help='vk токен')
 parser.add_argument('-b', '--bot_token', default='5376821545:AAEh44iTkHZBqKo4Sv2KzyWIawD-rXm6GBM', type=str,
                     help='токен бота')
-parser.add_argument('-v', '--verbose', default=True, type=bool,
-                    help='нужно ли выводить прогресс сборки картинок пользователю')
-parser.add_argument('-c', '--comments', default=False, type=bool,
-                    help='нужно ли парсить комментарии')
+parser.add_argument('-v', '--verbose', default=True, type=bool, help='выводить прогресс сборки картинок пользователю')
+parser.add_argument('-c', '--comments', default=False, type=bool, help='парсить комментарии')
+parser.add_argument('-t', '--delay', default=340000, type=int,
+                    help='минимальное время между запросами (в микросекундах)')
 
 args = parser.parse_args()
 
 
-API_TOKEN = args.bot_token
-VK_TOKEN = args.vk_api_token
-VERBOSE = args.verbose
-COMMENTS = args.comments
-
-vkparser = ParserVK(VK_TOKEN, VERBOSE, COMMENTS)
+vkparser = ParserVK(args.vk_api_token, args.verbose, args.comments, args.delay)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=args.bot_token)
 dp = Dispatcher(bot)
 
 

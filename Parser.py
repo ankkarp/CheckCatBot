@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import requests
 import vk_requests
@@ -13,7 +13,7 @@ from model.predict import img_predict
 class ParserVK:
     """Класс парсера, отвечающий за парсинг данных, классификацию их."""
 
-    def __init__(self, vk_token: str, verbose: bool, check_comments: bool):
+    def __init__(self, vk_token: str, verbose: bool, check_comments: bool, delay: int):
         """
         Конструктор парсера
 
@@ -24,12 +24,15 @@ class ParserVK:
                 нужно ли выводить прогресс сборки картинок пользователю
             check_comments: bool
                 нужно ли парсить комментарии
+            delay: float
+                минимальное время между запросами (в секундах)
         """
         self.api = vk_requests.create_api(service_token=vk_token)
         self.verbose = verbose
         self.check_comments = check_comments
         self.min_time = time.mktime((2022, 1, 1, 0, 0, 0, 0, 0, 0))
         self.last_request = None
+        self.delay = timedelta(microseconds=delay)
 
     async def classify_photos(self, call, cats, total, post: dict):
         """
@@ -94,14 +97,16 @@ class ParserVK:
         return cats, total
 
     async def sleep(self):
-        duration = (datetime.now() - self.last_request).microseconds
-        if duration < 35000:
-            await asyncio.sleep(abs(0.35 - duration / 1000))
-        self.last_request = datetime.now()
+        # print(self.last_request)
+        if datetime.now() - self.last_request < self.delay:
+            self.last_request += self.delay
+            time.sleep((self.last_request - datetime.now()).microseconds / 1e6)
+        else:
+            self.last_request = datetime.now()
 
     async def parse_posts(self, call: types.CallbackQuery):
         """
-        Метод парсинга постов группы за 2022 год.
+        Метод парсинга постов
 
         Параметры:
             call: aiogram.types.CallbackQuery
@@ -148,4 +153,3 @@ class ParserVK:
             print(f'{call.message.chat.id}: {e}')
             if os.path.exists(f'{call.message.chat.id}.jpg'):
                 os.remove(f'{call.message.chat.id}.jpg')
-
