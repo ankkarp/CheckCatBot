@@ -100,7 +100,7 @@ class ParserVK:
         # print(self.last_request)
         if datetime.now() - self.last_request < self.delay:
             self.last_request += self.delay
-            time.sleep((self.last_request - datetime.now()).microseconds / 1e6)
+            await asyncio.sleep((self.last_request - datetime.now()).microseconds / 1e6)
         else:
             self.last_request = datetime.now()
 
