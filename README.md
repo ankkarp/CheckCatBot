@@ -10,3 +10,5 @@
 | -b --bot_token | токен бота | str
 | -v --verbose | выводить прогресс сборки картинок пользователю (по умолчанию True) | bool 
 | -c --comments | парсить комментарии (по умолчанию False) | bool
+
+Ссылка на бота: https://t.me/cat_check_bot
